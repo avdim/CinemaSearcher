@@ -6,9 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-open class RetrofitService {
-
-    //lateinit var retrofitService: RetrofitService
+class RetrofitService {
 
     companion object {
 

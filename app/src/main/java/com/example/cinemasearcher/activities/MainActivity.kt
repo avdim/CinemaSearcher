@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cinemasearcher.R
 import com.example.cinemasearcher.network.Movies
+import com.example.cinemasearcher.network.RetrofitService
 import com.example.cinemasearcher.recycler.RecyclerAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
-class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
+class MainActivity() : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     val KEY_TITLE = "title"
     val KEY_POSTER_URL = "poster"
@@ -22,7 +26,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     lateinit var recyclerView: RecyclerView
     lateinit var recyclerAdapter: RecyclerAdapter
-    var moviesAL: ArrayList<Movies> = arrayListOf()
+    var moviesAL: ArrayList<Movies> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +35,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.hasFixedSize()
-        recyclerAdapter = RecyclerAdapter(this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerAdapter = RecyclerAdapter(moviesAL, this@MainActivity)
+        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
         recyclerView.adapter = recyclerAdapter
 
         getMovies()
@@ -40,21 +44,22 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
     fun getMovies(){
 
-//        val moviesAPI = RetrofitService.start().getMovies()
-//
-//        moviesAPI.enqueue(object: Callback<List<Movies>> {
-//            override fun onFailure(call: Call<List<Movies>>,
-//                                   t: Throwable) {
-//                result(Result.failure(call, t))
-//            }
-//
-//            override fun onResponse(
-//                call: Call<List<Movies>>,
-//                response: Response<List<Movies>>
-//            ) {
-//
-//            }
-//        }
+        val moviesAPI = RetrofitService.start().getMovies()
+
+        moviesAPI.enqueue(object: Callback<Movies>{
+            override fun onResponse(
+                    call: Call<Movies>,
+                    response: Response<Movies>
+            ) {
+                moviesAL= response?.body()!!
+
+            }
+            override fun onFailure(call: Call<Movies>,
+                                   t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
