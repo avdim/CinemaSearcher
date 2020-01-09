@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">CinemaSearcher</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tvPoster">TextView</string>
+    <string name="tvTitle">TextView</string>
+    <string name="tvYear">TextView</string>
+    <string name="tvimdbID">TextView</string>
+    <string name="tvType">TextView</string>
+    <string name="img">ImageView</string>
+    <string name="todo">TODO</string>
+
+</resources>
