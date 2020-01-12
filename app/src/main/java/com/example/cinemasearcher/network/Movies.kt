@@ -12,7 +12,7 @@ data class Movies(
     @SerializedName("type")
     val type: String,
     @SerializedName("poster")
-    val poster: String
+    val posterURL: String
 )
 
 

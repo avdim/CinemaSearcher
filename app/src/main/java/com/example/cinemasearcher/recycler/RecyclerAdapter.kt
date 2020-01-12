@@ -12,9 +12,9 @@ import com.example.cinemasearcher.network.Movies
 import com.squareup.picasso.Picasso
 
 
-class RecyclerAdapter(val moviesAL: ArrayList<Movies>,
-                      val context: Context
-) : RecyclerView.Adapter<RecyclerAdapter.MovieViewHolder>() {
+class RecyclerAdapter(var moviesAL: ArrayList<Movies>,
+    val context: Context) :
+    RecyclerView.Adapter<RecyclerAdapter.MovieViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -29,16 +29,12 @@ class RecyclerAdapter(val moviesAL: ArrayList<Movies>,
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val currentMovie: Movies = moviesAL.get(position)
 
-        var title: String = currentMovie.title
-        var year: Int = currentMovie.year
-        var imdbID: Int = currentMovie.imdbID
-        var type: String = currentMovie.type
-        var URLposter: String = currentMovie.poster
+        var URLposter: String = currentMovie.posterURL
 
-        holder.title
-        holder.imdb
-        holder.type
-        holder.year
+        holder.title.text = moviesAL.get(position).title
+        holder.imdb.text = moviesAL.get(position).imdbID.toString()
+        holder.type.text = moviesAL.get(position).type
+        holder.year.text = moviesAL.get(position).year.toString()
 
         Picasso.get().load(URLposter).fit().centerInside().into(holder.poster)
 
