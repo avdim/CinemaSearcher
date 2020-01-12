@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
                 moviesArrayList = response.body()!!
                 recyclerAdapter = RecyclerAdapter(moviesArrayList, this@MainActivity)
-
             }
             override fun onFailure(call: Call<ArrayList<Movies>>, t: Throwable) {
                 t.printStackTrace()
@@ -71,6 +70,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
         intent.putExtra(KEY_POSTER_URL, clickedMovie.posterURL)
 
         startActivity(intent)
+
     }
 }
 

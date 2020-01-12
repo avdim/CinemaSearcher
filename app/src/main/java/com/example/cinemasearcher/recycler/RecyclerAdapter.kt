@@ -49,4 +49,5 @@ class RecyclerAdapter(var moviesAL: ArrayList<Movies>,
         val imdb: TextView = itemView.findViewById(R.id.tvimdb)
 
     }
+
 }
