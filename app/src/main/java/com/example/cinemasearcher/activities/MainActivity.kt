@@ -1,10 +1,7 @@
 package com.example.cinemasearcher.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +10,7 @@ import com.example.cinemasearcher.R
 import com.example.cinemasearcher.network.Movies
 import com.example.cinemasearcher.network.RetrofitService
 import com.example.cinemasearcher.recycler.RecyclerAdapter
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
@@ -20,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     val KEY_TITLE = "title"
     val KEY_POSTER_URL = "poster"
@@ -45,16 +43,32 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun responseFromAPI() {
+        enqueRequest()
+        rxJavaRequest()
+    }
 
-        var call = RetrofitService.start().getMovies()
+    private fun rxJavaRequest() {
+        val call2 = RetrofitService.start().getMovies()
+            .subscribeOn(Schedulers.io())
+            .unsubscribeOn(Schedulers.io())
+            // данные обрабатываются подписчиком в mainTread
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ it ->
+                Log.d("size", it.size.toString())
+                setDataInRecyclerView(movies = it)
+            }, { it ->
+                Log.d("error", "error")
+            })
+    }
 
-
-        call.enqueue(object : Callback<ArrayList<Movies>> {
+    private fun enqueRequest() {
+        RetrofitService.start().getMovies().enqueue(object : Callback<ArrayList<Movies>> {
             override fun onResponse(
                 call: Call<ArrayList<Movies>>,
                 response: Response<ArrayList<Movies>>
             ) {
 
+                println(response.toString())
                 if (response.isSuccessful) {
                     var moviesArrayList: ArrayList<Movies> = response.body()!!
                     recyclerAdapter = RecyclerAdapter(moviesArrayList, this@MainActivity)
@@ -73,25 +87,13 @@ class MainActivity : AppCompatActivity(){
 
             }
         })
+    }
 
-
-        //        var call = RetrofitService.start().getMovies()
-//            .subscribeOn(Schedulers.io())
-//            .unsubscribeOn(Schedulers.io())
-//                // данные обрабатываются подписчиком в mainTread
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({ it ->
-//                Log.d("size", it.size.toString())
-//                setDataInRecyclerView(it = )
-//            }, { it ->
-//                Log.d("error", "error")
-//            })
-//    }
-//    private fun setDataInRecyclerView(it: ArrayList<Movies>?) {
-//        recyclerView.adapter = RecyclerAdapter(it!!,this)
-//    }
+    private fun setDataInRecyclerView(movies: ArrayList<Movies>?) {
+        recyclerView.adapter = RecyclerAdapter(movies!!, this)
     }
 }
+
 //
 //    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 //
@@ -111,8 +113,9 @@ class MainActivity : AppCompatActivity(){
 //}
 
 
+fun Observable<*>.enqueue(anyObj: Any) {
 
-
+}
 
 
 
