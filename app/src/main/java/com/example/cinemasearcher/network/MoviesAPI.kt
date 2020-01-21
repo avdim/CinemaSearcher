@@ -3,10 +3,15 @@ package com.example.cinemasearcher.network
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 
 interface MoviesAPI {
 
-    @GET("?s=superman&apikey=52750b21")
+    @GET("movie/popular/")
     fun getMovies(): Call<ArrayList<Movies>>
+
+//    @GET("movie/{id}")
+//    fun getMovieById(@Path("id") id:Int): Call<ArrayList<Movies>>
 }
+
